@@ -1,0 +1,11 @@
+[
+{"id":"TH001","title":"Dế Mèn phiêu lưu ký","author":"Tô Hoài","level":["tieuhoc"],"topic":"Truyện thiếu nhi","type":"giay","url":"","copies":3,"color":"#2f7d5b"},
+{"id":"TH002","title":"Tuyển tập truyện cổ tích Việt Nam","author":"Nhiều tác giả","level":["tieuhoc"],"topic":"Truyện cổ tích","type":"giay","url":"","copies":4,"color":"#e4572e"},
+{"id":"TH003","title":"Kính vạn hoa (tập 1)","author":"Nguyễn Nhật Ánh","level":["tieuhoc","thcs"],"topic":"Truyện dài","type":"giay","url":"","copies":2,"color":"#3a6ea5"},
+{"id":"TC001","title":"Tôi thấy hoa vàng trên cỏ xanh","author":"Nguyễn Nhật Ánh","level":["thcs"],"topic":"Văn học","type":"giay","url":"","copies":3,"color":"#d9a521"},
+{"id":"TC002","title":"Những tấm lòng cao cả","author":"Edmondo De Amicis","level":["thcs"],"topic":"Kỹ năng sống","type":"giay","url":"","copies":2,"color":"#8a4f7d"},
+{"id":"TC003","title":"Lão Hạc","author":"Nam Cao","level":["thcs","thpt"],"topic":"Văn học","type":"giay","url":"","copies":2,"color":"#5b6c5d"},
+{"id":"PT001","title":"Truyện Kiều","author":"Nguyễn Du","level":["thpt"],"topic":"Văn học","type":"giay","url":"","copies":5,"color":"#9c2f3f"},
+{"id":"PT002","title":"Đắc nhân tâm","author":"Dale Carnegie","level":["thpt"],"topic":"Kỹ năng sống","type":"giay","url":"","copies":2,"color":"#1f4e5f"},
+{"id":"PT003","title":"Lược sử thời gian","author":"Stephen Hawking","level":["thpt"],"topic":"STEM","type":"giay","url":"","copies":1,"color":"#34495e"}
+]

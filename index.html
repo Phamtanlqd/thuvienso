@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thư viện số nhà trường</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12303a;--bg:#f4f8fa;--teal:#0f4c5c;--amber:#f2a33a;--coral:#e4572e;--line:#d3e0e5;--fs:16px}
+body.kid{--fs:19px;--teal:#1b6e5a}
+*{box-sizing:border-box}body{margin:0;font:var(--fs)/1.55 "Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+header{background:var(--teal);color:#fff;padding:28px 5vw 0}
+header h1{margin:0 0 4px;font-size:clamp(1.5rem,4vw,2.4rem);font-weight:800}
+header p{margin:0 0 18px;opacity:.85;max-width:60ch}
+.search{display:flex;gap:8px;max-width:560px}
+input,select,button{font:inherit;padding:10px 14px;border-radius:10px;border:2px solid var(--line)}
+.search input{flex:1}
+button{cursor:pointer;background:var(--amber);border-color:var(--amber);font-weight:600;color:#2a1a00}
+button.ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.shelf{display:flex;align-items:flex-end;gap:4px;margin-top:26px;overflow-x:auto;padding:0 2px;border-bottom:12px solid #0a3541;min-height:150px}
+.spine{all:unset;cursor:pointer;flex:none;width:34px;border-radius:4px 4px 0 0;writing-mode:vertical-rl;text-align:left;padding:10px 0;font-size:12px;font-weight:600;color:#fff;overflow:hidden;white-space:nowrap}
+.spine:hover{transform:translateY(-8px)}.spine:focus-visible{outline:3px solid var(--amber)}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 5vw;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+nav button{background:#fff;border-color:var(--line);color:var(--ink)}nav button[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}
+main{padding:20px 5vw 60px;display:grid;gap:28px;grid-template-columns:1fr;max-width:1100px;margin:auto}
+@media(min-width:860px){main{grid-template-columns:2fr 1fr}}
+.row{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.row i{width:10px;align-self:stretch;border-radius:3px;flex:none}.row b{display:block}.row small{color:#51707a}
+.row button{margin-left:auto}
+aside section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+aside h2,main h2{font-size:1.05rem;margin:0 0 8px}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;background:#fff3dc;margin:2px;font-size:.85em}
+dialog{border:none;border-radius:16px;max-width:480px;width:92%;padding:22px}dialog::backdrop{background:#0008}
+dialog label{display:block;margin:10px 0 2px;font-weight:600}dialog input{width:100%}
+.msg{margin-top:10px;font-weight:600}
+footer{padding:20px 5vw;color:#51707a;font-size:.85em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.spine{transition:transform .15s}
+</style></head><body>
+<header>
+<h1 id="school"></h1>
+<p>Tra cứu sách, đặt mượn trực tuyến và ghi nhật ký đọc. Không cần tài khoản.</p>
+<form class="search" id="sf" role="search"><input id="q" type="search" placeholder="Tìm tên sách, tác giả, chủ đề" aria-label="Tìm sách"><button>Tìm sách</button></form>
+<div class="shelf" id="shelf" aria-label="Kệ sách nổi bật"></div>
+</header>
+<nav id="nav" aria-label="Cấp học"></nav>
+<main>
+<section><h2 id="count"></h2><div id="list"></div></section>
+<aside>
+<section><h2>Nhật ký đọc của em</h2><p id="logsum">Chưa có sách nào. Mở một cuốn và bấm “Em đã đọc xong”.</p><div id="badges"></div></section>
+<section><h2>Tra cứu phiếu mượn</h2><label for="chk" style="display:block">Mã học sinh</label><input id="chk" style="width:100%"><button class="ghost" id="chkb" style="margin-top:8px">Xem phiếu</button><div id="chkout" class="msg"></div></section>
+</aside></main>
+<dialog id="dlg"><h2 id="dt"></h2><p id="dm"></p><div id="da"></div>
+<form id="bf"><label for="sc">Mã học sinh</label><input id="sc" required maxlength="20"><label for="cl">Lớp</label><input id="cl" required maxlength="10" placeholder="Ví dụ: 5A2">
+<p style="display:flex;gap:8px;margin-top:14px"><button>Đặt mượn sách giấy</button><button type="button" class="ghost" id="rd">Em đã đọc xong</button><button type="button" class="ghost" id="cx">Đóng</button></p></form><div id="bm" class="msg" role="status"></div></dialog>
+<footer>Thư viện chỉ lưu mã học sinh và lớp để quản lý mượn trả. Không thu thập số điện thoại hay ảnh. Hệ thống tuân thủ nhu cầu tiêu chuẩn thư viện theo Thông tư 16/2022/TT-BGDĐT.</footer>
+<script>
+const CONFIG={school:"Thư viện số - Trường của em",appsScriptUrl:""}; // dán URL Web App sau khi triển khai Apps Script
+const LV={all:"Tất cả",tieuhoc:"Tiểu học",thcs:"THCS",thpt:"THPT"};
+const $=s=>document.querySelector(s);let books=[],lv="all",cur=null;
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+$("#school").textContent=CONFIG.school;
+fetch("data/books.json").then(r=>r.json()).then(d=>{books=d;init()}).catch(()=>$("#list").textContent="Không tải được danh mục sách. Hãy kiểm tra file data/books.json.");
+function init(){
+ $("#shelf").innerHTML=books.map(b=>`<button class="spine" data-id="${esc(b.id)}" style="background:${esc(b.color)};height:${100+(b.title.length%5)*12}px" title="${esc(b.title)}">${esc(b.title)}</button>`).join("");
+ $("#nav").innerHTML=Object.keys(LV).map(k=>`<button data-lv="${k}" aria-pressed="${k===lv}">${LV[k]}</button>`).join("");
+ render();badges();
+}
+function render(){
+ const q=$("#q").value.trim().toLowerCase();
+ const r=books.filter(b=>(lv==="all"||b.level.includes(lv))&&(!q||(b.title+b.author+b.topic).toLowerCase().includes(q)));
+ $("#count").textContent=r.length?`${r.length} đầu sách`:"Không tìm thấy sách. Thử từ khóa ngắn hơn hoặc chọn “Tất cả”.";
+ $("#list").innerHTML=r.map(b=>`<div class="row"><i style="background:${esc(b.color)}"></i><div><b>${esc(b.title)}</b><small>${esc(b.author)} · ${esc(b.topic)}</small></div><button class="ghost" data-id="${esc(b.id)}">Xem sách</button></div>`).join("");
+}
+document.addEventListener("click",e=>{
+ const n=e.target.closest("[data-lv]");if(n){lv=n.dataset.lv;document.body.classList.toggle("kid",lv==="tieuhoc");document.querySelectorAll("#nav button").forEach(x=>x.setAttribute("aria-pressed",x===n));render();return}
+ const s=e.target.closest("[data-id]");if(s)openBook(s.dataset.id);
+});
+$("#sf").onsubmit=e=>{e.preventDefault();render()};$("#q").oninput=render;
+function openBook(id){cur=books.find(b=>b.id===id);if(!cur)return;
+ $("#dt").textContent=cur.title;$("#dm").textContent=cur.author+" · "+cur.topic+" · còn "+cur.copies+" bản giấy";
+ $("#da").innerHTML=cur.url?`<p><a href="${esc(cur.url)}" target="_blank" rel="noopener"><button type="button">Đọc sách điện tử</button></a></p>`:"";
+ $("#bm").textContent="";$("#dlg").showModal()}
+$("#cx").onclick=()=>$("#dlg").close();
+$("#rd").onclick=()=>{const l=store.get("log",[]);if(!l.includes(cur.id)){l.push(cur.id);store.set("log",l)}badges();$("#bm").textContent="Đã ghi vào nhật ký đọc."};
+function badges(){const n=store.get("log",[]).length;
+ $("#logsum").textContent=n?`Em đã đọc ${n} cuốn sách.`:"Chưa có sách nào. Mở một cuốn và bấm “Em đã đọc xong”.";
+ const t=[[1,"Mầm đọc sách"],[3,"Ong chăm chỉ"],[5,"Nhà thám hiểm sách"],[10,"Đại sứ văn hóa đọc"]];
+ $("#badges").innerHTML=t.filter(x=>n>=x[0]).map(x=>`<span class="badge">${x[1]}</span>`).join("")}
+async function api(opt){if(!CONFIG.appsScriptUrl)throw new Error("Thư viện chưa kết nối sổ mượn trả. Cán bộ thư viện cần dán URL Apps Script vào CONFIG.");return fetch(opt.url||CONFIG.appsScriptUrl,opt.init)}
+$("#bf").onsubmit=async e=>{e.preventDefault();const m=$("#bm");m.textContent="Đang gửi...";
+ try{const r=await api({init:{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({bookId:cur.id,title:cur.title,studentCode:$("#sc").value.trim(),className:$("#cl").value.trim()})}});
+ const j=await r.json();m.textContent=j.ok?"Đã đặt mượn. Em đến thư viện nhận sách khi có thông báo.":(j.error||"Chưa gửi được. Em thử lại nhé.")}
+ catch(err){m.textContent=err.message}};
+$("#chkb").onclick=async()=>{const o=$("#chkout"),c=$("#chk").value.trim();if(!c){o.textContent="Hãy nhập mã học sinh.";return}
+ try{const r=await api({url:CONFIG.appsScriptUrl+"?code="+encodeURIComponent(c)});const j=await r.json();
+ o.innerHTML=j.items&&j.items.length?j.items.map(i=>esc(i.title)+": "+esc(i.status)+(i.due?" (hạn "+esc(i.due)+")":"")).join("<br>"):"Chưa có phiếu mượn nào."}catch(err){o.textContent=err.message}};
+</script></body></html>
