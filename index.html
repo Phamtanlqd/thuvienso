@@ -65,7 +65,7 @@ footer{padding:0 5vw 30px;color:#5b6882;font-size:.85em}
 <div id="bm" class="msg" role="status"></div></dialog>
 <footer>Thư viện chỉ lưu mã học sinh và lớp để quản lý mượn trả. Nhật ký đọc chỉ lưu trên thiết bị của bạn.</footer>
 <script>
-const CONFIG={school:"Thư viện số trường THPT",theme:"thpt",grades:["10","11","12"],appsScriptUrl:""}; // dán URL Web App của Apps Script
+const CONFIG={school:"Thư viện số trường THPT",theme:"thpt",grades:["10","11","12"],appsScriptUrl:"https://script.google.com/macros/s/AKfycbxCx8cmDK6_SiWj4fzT_X1qVFe4u5Eri8P3ChmDH8je0OCKyQlQAu9a4HIaIznVJD0/exec"}; // dán URL Web App của Apps Script
 const $=s=>document.querySelector(s);
 const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fold=s=>String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");
@@ -75,7 +75,7 @@ const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e)
 const TABS={books:"Sách",res:"Học liệu",tk:"Phiếu mượn",log:"Nhật ký đọc"};
 let books=[],res=[],gr=store.get("gr","all"),cur=null;
 $("#school").textContent=CONFIG.school;document.body.dataset.lv=CONFIG.theme;
-async function api(a,p){const u=new URL(CONFIG.appsScriptUrl);u.searchParams.set("action",a);Object.entries(p||{}).forEach(([k,v])=>u.searchParams.set(k,v));
+async function (a,p){const u=new URL(CONFIG.appsScriptUrl);u.searchParams.set("action",a);Object.entries(p||{}).forEach(([k,v])=>u.searchParams.set(k,v));
  const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);try{return await(await fetch(u,{signal:c.signal})).json()}finally{clearTimeout(t)}}
 const lvl=x=>(Array.isArray(x.grade)?x.grade:String(x.grade||"Chung").split(",")).map(s=>s.trim());
 async function load(){let live=false;
