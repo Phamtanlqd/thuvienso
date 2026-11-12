@@ -4,7 +4,8 @@ Chạy trên GitHub Pages + Google Sheets/Apps Script. Không cần máy chủ.
 
 | Thành phần | Nội dung |
 |---|---|
-| Giao diện | `index.html`: kệ sách 3D bằng CSS, giao diện THPT hiện đại, lọc theo khối 10/11/12, responsive |
+| Giao diện | `index.html`: bố cục kiểu thư viện điện tử (menu Tài liệu 9 chuyên mục, hero, kệ sách 3D), lọc theo khối, responsive |
+| Chuyên mục | Cột **Loại** trong tab Resources phải trùng tên chuyên mục: Không gian văn hóa, Sách điện tử, Sách nói, Bài giảng điện tử, Video, Album ảnh, Kỹ năng sống, Báo, tạp chí. Cột I (tùy chọn) là link ảnh bìa |
 | Danh mục | Tìm kiếm không dấu/có dấu, lọc theo khối, xem số bản còn lại |
 | Học liệu | Danh mục liên kết tài liệu số hợp pháp, có ghi nguồn |
 | Mượn sách | Biểu mẫu đặt mượn, trả về mã phiếu để tra trạng thái |
