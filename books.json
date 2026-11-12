@@ -1,0 +1,83 @@
+[
+{
+"id": "PT001",
+"title": "Truyện Kiều",
+"author": "Nguyễn Du",
+"grade": "Chung",
+"topic": "Văn học",
+"copies": 5,
+"color": "#c0392b"
+},
+{
+"id": "PT002",
+"title": "Chí Phèo",
+"author": "Nam Cao",
+"grade": "11",
+"topic": "Văn học",
+"copies": 3,
+"color": "#4b7f6a"
+},
+{
+"id": "PT003",
+"title": "Số đỏ",
+"author": "Vũ Trọng Phụng",
+"grade": "11",
+"topic": "Văn học",
+"copies": 2,
+"color": "#e0a100"
+},
+{
+"id": "PT004",
+"title": "Tuổi thơ dữ dội",
+"author": "Phùng Quán",
+"grade": "10",
+"topic": "Văn học",
+"copies": 3,
+"color": "#2f80ed"
+},
+{
+"id": "PT005",
+"title": "Đắc nhân tâm",
+"author": "Dale Carnegie",
+"grade": "Chung",
+"topic": "Kỹ năng sống",
+"copies": 3,
+"color": "#1f6f8b"
+},
+{
+"id": "PT006",
+"title": "Nhà giả kim",
+"author": "Paulo Coelho",
+"grade": "Chung",
+"topic": "Văn học nước ngoài",
+"copies": 2,
+"color": "#f26b38"
+},
+{
+"id": "PT007",
+"title": "Lược sử thời gian",
+"author": "Stephen Hawking",
+"grade": "12",
+"topic": "STEM",
+"copies": 1,
+"color": "#3d4a6b"
+},
+{
+"id": "PT008",
+"title": "Sapiens: Lược sử loài người",
+"author": "Yuval Noah Harari",
+"grade": "12",
+"topic": "Lịch sử",
+"copies": 2,
+"color": "#9b51e0"
+},
+{
+"id": "PT009",
+"title": "Vũ trụ trong vỏ hạt dẻ",
+"author": "Stephen Hawking",
+"grade": "Chung",
+"topic": "STEM",
+"copies": 1,
+"color": "#2f9e6e"
+}
+]
