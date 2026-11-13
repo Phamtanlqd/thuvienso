@@ -96,6 +96,34 @@ select{font:inherit;padding:10px 14px;border-radius:10px;border:1.5px solid var(
 .acts{display:flex;gap:6px;flex-wrap:wrap}.sm{padding:6px 12px}
 .form{display:grid;gap:8px;max-width:420px}
 @media(max-width:860px){nav.main>button.login{margin-left:0;max-width:none;text-align:center}.row{flex-direction:column;align-items:flex-start}}
+/* trang danh mục tài liệu */
+.crumb{font-size:.9em;color:var(--mut);margin:18px 0 12px}.crumb b{color:var(--g)}
+.catlay{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start}
+.catlay.nofs{grid-template-columns:1fr}.catlay.nofs .fside,.catlay.nofs .ftog{display:none}
+.fside{background:#fff;border:1px solid var(--ln);border-radius:var(--r);padding:16px 18px;position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto}
+.fh{display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.clr{border:0;background:none;color:var(--g);padding:0;font-weight:600}
+.fg h4{margin:18px 0 6px}.fg label{display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.fg input{width:auto;padding:0;margin-top:5px;accent-color:var(--g)}
+.ftog{display:none}
+.catmain{background:#fff;border:1px solid var(--ln);border-radius:var(--r);padding:22px;min-width:0}
+.cathead{display:flex;justify-content:space-between;align-items:center;gap:12px}.cathead h2{margin:0}
+.vt button{padding:8px 12px;margin-left:6px;border-radius:8px}.vt button[aria-pressed=true]{background:var(--g);border-color:var(--g);color:#fff}
+.gchips{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+.gchips button{border-radius:99px;padding:6px 16px}.gchips button[aria-pressed=true]{background:#d8f1e4;border-color:#d8f1e4;color:var(--gd);font-weight:600}
+.sec{display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--g);padding-left:10px;margin:26px 0 14px;font-size:1rem;text-transform:uppercase}
+.sec button{border:0;background:none;color:var(--g);font-weight:600;padding:0;text-transform:none}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:22px 16px}
+.bc{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink)}
+.cv{display:block;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:#e6efe9;box-shadow:0 6px 16px #0d243622}
+.cv img{width:100%;height:100%;object-fit:cover;display:block}
+.gen{display:flex;width:100%;height:100%;align-items:flex-end;padding:14px;color:#fff;font-weight:800;line-height:1.15;word-break:break-word;background:linear-gradient(90deg,#0004 0 6%,#fff2 6% 8%,transparent 8%),hsl(var(--h) 50% 34%)}
+.bi{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bi b{line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bi small{color:var(--mut)}.bc:hover b{color:var(--g)}
+.stat span{display:inline-block;background:#f1f4f2;border-radius:8px;padding:2px 10px;font-size:.82em;color:var(--mut);margin-top:3px}
+.bl .bc{flex-direction:row;gap:16px;padding:14px 0;border-bottom:1px solid var(--ln);align-items:center}.bl .cv{width:84px;flex:none}
+@media(max-width:860px){.catlay{grid-template-columns:1fr}.ftog{display:inline-block;margin-bottom:12px;background:#fff}.fside{position:static;display:none;max-height:none}.fside.open{display:block}.catmain{padding:16px}}
 </style>
 </head>
 <body>
@@ -141,7 +169,18 @@ select{font:inherit;padding:10px 14px;border-radius:10px;border:1.5px solid var(
   <form id="sf2" role="search" style="display:flex;gap:8px;max-width:520px"><input id="q2" type="search" placeholder="Tìm sách, tác giả, chủ đề" aria-label="Tìm sách" style="flex:1;min-width:0"></form>
   <div class="grid" id="grid"></div>
  </div>
- <div id="p-cat" hidden><h2 id="ct"></h2><p class="sub">Chỉ liên kết đến nguồn hợp pháp, có ghi rõ nguồn.</p><div class="rgrid" id="clist"></div></div>
+ <div id="p-cat" hidden>
+  <div class="crumb"><a href="#/">Trang chủ</a> › Tài liệu › <b id="ct2"></b></div>
+  <div class="catlay">
+   <div><button class="ftog" id="ftog" aria-controls="fside">Bộ lọc tìm kiếm</button><aside class="fside" id="fside" aria-label="Bộ lọc tìm kiếm"></aside></div>
+   <section class="catmain">
+    <div class="cathead"><h2 id="ct"></h2><div class="vt" role="group" aria-label="Kiểu hiển thị"><button id="vg" aria-label="Dạng lưới">Lưới</button><button id="vl" aria-label="Dạng danh sách">Danh sách</button></div></div>
+    <div class="gchips" id="cgr" role="group" aria-label="Chọn khối lớp"></div>
+    <p class="sub">Chỉ liên kết đến nguồn hợp pháp, có ghi rõ nguồn.</p>
+    <div id="clist"></div>
+   </section>
+  </div>
+ </div>
  <div id="p-tk" hidden><h2>Phiếu mượn của tôi</h2><div id="minelist"></div></div>
  <div id="p-desk" hidden><h2>Quầy mượn trả</h2><p class="sub">Cho mượn khi trao sách, nhận trả khi học sinh hoàn trả.</p>
   <input id="dq" placeholder="Lọc theo tên, tài khoản, lớp hoặc sách" style="width:100%;max-width:420px"><div id="desklist"></div></div>
@@ -270,12 +309,48 @@ function renderBooks() {
   $("#cnt").textContent = list.length ? list.length + " đầu sách" : "Chưa tìm thấy sách. Thử từ khóa ngắn hơn hoặc chọn “Tất cả”.";
   $("#grid").innerHTML = list.map(b => `<div class="item">${cover(b)}<b>${esc(b.title)}</b><small>${esc(b.author)}</small><span class="tag ${b.available > 0 ? "" : "off"}">${b.available > 0 ? "Còn " + b.available + " bản" : "Hết bản"}</span></div>`).join("");
 }
+let cf = { set: "", folder: "" }, view = store.get("view", "grid"), catSlug = "";
+const hueOf = s => [...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+const bookCard = x => {
+  const u = safeUrl(x.url), im = safeUrl(x.img);
+  const cv = im ? `<img src="${esc(im)}" alt="" loading="lazy">` : `<span class="gen" style="--h:${hueOf(x.title)}">${esc(x.title)}</span>`;
+  const st = x.views > 0 ? `<span class="stat"><span>${esc(x.views)} lượt xem</span></span>` : "";
+  const inner = `<span class="cv">${cv}</span><span class="bi"><b>${esc(x.title)}</b><small>${esc(x.folder || x.topic || x.type)}</small><small>Nguồn: ${esc(x.source)}</small>${st}</span>`;
+  return u ? `<a class="bc" href="${esc(u)}" target="_blank" rel="noopener">${inner}</a>` : `<div class="bc">${inner}</div>`;
+};
 function renderCat(slug) {
   const c = CATS.find(x => x[0] === slug); if (!c) return;
-  $("#ct").textContent = c[1];
-  const rl = res.filter(r => r.type === c[1] && match(r));
-  $("#clist").innerHTML = rl.length ? rl.map(resCard).join("") : `<p>Chưa có tài liệu loại “${esc(c[1])}”. Thủ thư thêm trong tab Resources, cột Loại ghi đúng “${esc(c[1])}”.</p>`;
+  if (catSlug !== slug) { cf = { set: "", folder: "" }; catSlug = slug; }
+  $("#ct").textContent = c[1]; $("#ct2").textContent = c[1];
+  $("#cgr").innerHTML = ["all", ...CONFIG.grades].map(k => `<button data-cg="${esc(k)}" aria-pressed="${k === gr}">${k === "all" ? "Tất cả" : "Khối " + esc(k)}</button>`).join("");
+  $("#vg").setAttribute("aria-pressed", view === "grid"); $("#vl").setAttribute("aria-pressed", view === "list");
+  const base = res.filter(r => r.type === c[1] && match(r));
+  const facet = k => { const m = {}; base.forEach(r => { if (r[k]) m[r[k]] = (m[r[k]] || 0) + 1; }); return Object.entries(m).sort((a, b) => a[0].localeCompare(b[0], "vi")); };
+  const sets = facet("set"), folders = facet("folder"), active = (cf.set ? 1 : 0) + (cf.folder ? 1 : 0);
+  const grp = (t, k, arr) => arr.length ? `<div class="fg"><h4>${t}</h4>${arr.map(([v, n]) => `<label><input type="radio" name="f-${k}" data-fk="${k}" value="${esc(v)}"${cf[k] === v ? " checked" : ""}> <span>${esc(v)} (${n})</span></label>`).join("")}</div>` : "";
+  $("#fside").innerHTML = `<div class="fh"><span>Lọc (${active})</span><button class="clr" data-clr>Xóa tất cả</button></div>` + grp("Bộ sách", "set", sets) + grp("Thư mục", "folder", folders);
+  $("#p-cat .catlay").classList.toggle("nofs", !sets.length && !folders.length);
+  const list = base.filter(r => (!cf.set || r.set === cf.set) && (!cf.folder || r.folder === cf.folder));
+  const wrap = x => `<div class="${view === "list" ? "bl" : "bgrid"}">${x}</div>`;
+  let html;
+  if (!list.length) html = `<p>Chưa có tài liệu loại “${esc(c[1])}” phù hợp. Thủ thư thêm trong tab Resources, cột Loại ghi đúng “${esc(c[1])}”.</p>`;
+  else if (!active && folders.length) {
+    const g = {}; list.forEach(r => { const f = r.folder || "Khác"; (g[f] = g[f] || []).push(r); });
+    html = Object.keys(g).map(f => `<h3 class="sec"><span>${esc(f)}</span>${g[f].length > 4 && f !== "Khác" ? `<button data-more="${esc(f)}">Xem thêm »</button>` : ""}</h3>` +
+      wrap(g[f].slice(0, f === "Khác" ? 999 : 4).map(bookCard).join(""))).join("");
+  } else html = wrap(list.map(bookCard).join(""));
+  $("#clist").innerHTML = html;
 }
+$("#p-cat").addEventListener("change", e => { const r = e.target.closest("[data-fk]"); if (r) { cf[r.dataset.fk] = r.value; renderCat(catSlug); } });
+$("#p-cat").addEventListener("click", e => {
+  const t = e.target;
+  if (t.closest("[data-clr]")) { cf = { set: "", folder: "" }; return renderCat(catSlug); }
+  const m = t.closest("[data-more]"); if (m) { cf.folder = m.dataset.more; return renderCat(catSlug); }
+  const g = t.closest("[data-cg]"); if (g) { gr = g.dataset.cg; store.set("gr", gr); return renderCat(catSlug); }
+  if (t.closest("#vg")) { view = "grid"; store.set("view", view); return renderCat(catSlug); }
+  if (t.closest("#vl")) { view = "list"; store.set("view", view); return renderCat(catSlug); }
+  if (t.closest("#ftog")) $("#fside").classList.toggle("open");
+});
 
 /* ---- Định tuyến theo # ---- */
 function route() {
