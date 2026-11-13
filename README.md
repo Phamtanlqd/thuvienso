@@ -1,17 +1,14 @@
-# Thư viện số trường THPT
+# Thư viện số trường THPT Chuyên Lê Quý Đôn, Điện Biên
 
-Chạy trên GitHub Pages + Google Sheets/Apps Script. Không cần máy chủ.
+Giao diện chạy trên GitHub Pages, dữ liệu và sổ mượn trả trên Google Sheets + Apps Script.
 
 | Thành phần | Nội dung |
 |---|---|
-| Giao diện | `index.html`: bố cục kiểu thư viện điện tử (menu Tài liệu 9 chuyên mục, hero, kệ sách 3D), lọc theo khối, responsive |
-| Chuyên mục | Cột **Loại** trong tab Resources phải trùng tên chuyên mục: Không gian văn hóa, Sách điện tử, Sách nói, Bài giảng điện tử, Video, Album ảnh, Kỹ năng sống, Báo, tạp chí. Cột I (tùy chọn) là link ảnh bìa |
-| Danh mục | Tìm kiếm không dấu/có dấu, lọc theo khối, xem số bản còn lại |
-| Học liệu | Danh mục liên kết tài liệu số hợp pháp, có ghi nguồn |
-| Mượn sách | Biểu mẫu đặt mượn, trả về mã phiếu để tra trạng thái |
-| Backend | `apps-script/Code.gs` |
-| Cơ sở dữ liệu | `sheet/ThuVienSo-THPT-Template.xlsx` (Books, Resources, LoanRequests, ReadingPeriods, ThongKe) |
+| `index.html` | Giao diện: trang chủ, kệ sách 3D, menu Tài liệu, mượn sách giấy, nhật ký đọc, phiếu của tôi, quầy mượn trả, quản trị |
+| `config.js` | Tên trường, khối lớp, URL máy chủ (chỉ sửa file này) |
+| `apps-script/Code.gs` | Máy chủ: danh mục, đăng nhập, phân quyền, mượn trả |
+| `sheet/` | Google Sheet mẫu (Books, Resources, LoanRequests, Users, NhapTaiKhoan, ReadingPeriods, ThongKe) |
+| `data/` | Danh mục dự phòng khi Apps Script không phản hồi |
+| `docs/` | DEPLOYMENT, TAI_KHOAN, DATABASE, SECURITY, TEST_PLAN, ROADMAP, CHUYEN_CAP_HOC |
 
-Đổi sang cấp học khác: xem `docs/CHUYEN_CAP_HOC.md`.
-Tài liệu: DEPLOYMENT, DATABASE, SECURITY, TEST_PLAN, ROADMAP trong thư mục `docs/`.
-Danh mục tĩnh `data/*.json` là bản dự phòng khi Apps Script lỗi; sau khi dùng Sheet có thể cập nhật định kỳ.
+Bắt đầu từ `docs/DEPLOYMENT.md`.

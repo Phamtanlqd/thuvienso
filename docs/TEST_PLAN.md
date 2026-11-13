@@ -1,18 +1,21 @@
-# 15 ca kiểm thử
-| # | Nhóm | Thao tác | Kết quả mong đợi |
-|---|---|---|---|
-| 1 | Giao diện | Mở trên điện thoại 360px | Không cuộn ngang, kệ sách cuộn ngang được |
-| 2 | Giao diện | Chọn Khối 11 | Hiện sách khối 11 và sách Chung, ẩn sách khối khác |
-| 3 | Giao diện | Bật giảm chuyển động trên hệ điều hành | Không còn hiệu ứng nghiêng sách |
-| 4 | Giao diện | Máy cấu hình thấp, mạng chậm | Trang dùng được trong vài giây, không treo |
-| 5 | Danh mục | Tìm "de men", "Dế Mèn" | Cả hai đều ra cùng một sách |
-| 6 | Danh mục | Tìm từ không tồn tại | Hiện thông báo gợi ý, không để trống |
-| 7 | Mượn | Đặt mượn hợp lệ | Nhận mã phiếu, Sheet có dòng Chờ duyệt |
-| 8 | Mượn | Đặt cuốn thứ 4 cùng mã HS | Báo đang giữ tối đa 3 cuốn |
-| 9 | Mượn | Đặt lại đúng cuốn đã đặt | Báo đã đặt rồi |
-| 10 | Mượn | Sách hết bản | Không hiện form, báo hết bản |
-| 11 | Mượn | Gửi mã HS có ký tự lạ | Báo sai định dạng |
-| 12 | An toàn | Nhập `<script>` hoặc `=1+1` vào lớp/mã | Không chạy script, Sheet không tính công thức |
-| 13 | An toàn | Gửi 6 lần trong một giờ | Lần thứ 6 bị từ chối |
-| 14 | An toàn | Tra phiếu bằng mã HS thay vì mã phiếu | Không thấy phiếu nào |
-| 15 | Vận hành | Tắt Apps Script hoặc mất mạng | Trang vẫn hiện danh mục dự phòng kèm thông báo |
+# Kiểm thử (18 ca)
+| # | Thao tác | Kết quả mong đợi |
+|---|---|---|
+| 1 | Mở trang trên điện thoại 360px | Không cuộn ngang, menu Menu mở được |
+| 2 | Chọn Khối 11 | Hiện sách khối 11 và sách Chung |
+| 3 | Tìm "de men" và "Dế Mèn" | Ra cùng kết quả |
+| 4 | Tắt Apps Script hoặc mất mạng | Vẫn xem được danh mục lưu sẵn kèm thông báo |
+| 5 | Chưa đăng nhập, bấm sách | Chỉ có nút Đăng nhập để mượn |
+| 6 | Đăng nhập sai mật khẩu | Báo sai, không lộ thông tin tài khoản có tồn tại hay không |
+| 7 | Sai 5 lần liên tiếp | Khóa đăng nhập 15 phút |
+| 8 | Đăng nhập lần đầu | Bị bắt đổi mật khẩu, chưa đổi thì không mượn được |
+| 9 | Mật khẩu mới yếu (ngắn, thiếu số) | Bị từ chối |
+| 10 | Học sinh đặt mượn | Có mã phiếu, Sheet có dòng Chờ duyệt, số bản giảm |
+| 11 | Đặt trùng sách, đặt vượt 3 cuốn | Bị từ chối |
+| 12 | Học sinh vào #/quay hoặc #/quan-tri | Không thấy dữ liệu, báo không có quyền |
+| 13 | Thủ thư bấm Cho mượn | Phiếu thành Đang mượn, có hạn trả |
+| 14 | Thủ thư bấm Nhận trả | Phiếu thành Đã trả, số bản tăng lại |
+| 15 | Thủ thư tạo tài khoản | Bị từ chối (chỉ quản trị) |
+| 16 | Quản trị tạo tài khoản, cấp lại mật khẩu | Hiện mật khẩu tạm một lần |
+| 17 | Nhập `<script>` hoặc `=1+1` khi tạo tài khoản | Không chạy mã, Sheet không tính công thức |
+| 18 | Đăng xuất rồi dùng lại nút Back | Không còn thấy mục của thủ thư/quản trị |

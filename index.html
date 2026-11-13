@@ -89,6 +89,13 @@ footer{background:var(--navy);color:#cbd8d2;padding:26px 0;font-size:.88em}
  .mega{position:static;box-shadow:none;border:0;padding:0 0 8px}.mega .wrap{grid-template-columns:1fr;padding:0}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}.book{transform:none}}
+nav.main>button.login{padding:10px 20px;border-radius:99px;background:var(--g);color:#fff;border:0;margin-left:8px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+select{font:inherit;padding:10px 14px;border-radius:10px;border:1.5px solid var(--ln);background:#fff;color:var(--ink)}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;margin:8px 0;background:#fff;border:1px solid var(--ln);border-radius:var(--r)}
+.row small{display:block;color:var(--mut)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}.sm{padding:6px 12px}
+.form{display:grid;gap:8px;max-width:420px}
+@media(max-width:860px){nav.main>button.login{margin-left:0;max-width:none;text-align:center}.row{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -101,7 +108,10 @@ footer{background:var(--navy);color:#cbd8d2;padding:26px 0;font-size:.88em}
    <button id="tl" aria-expanded="false" aria-controls="mega" data-r="tai-lieu">Tài liệu</button>
    <a href="#/sach-giay" data-r="sach-giay">Mượn sách giấy</a>
    <a href="#/nhat-ky" data-r="nhat-ky">Nhật ký đọc</a>
-   <a class="login" href="#/phieu" data-r="phieu">Phiếu của tôi</a>
+   <a href="#/phieu" data-r="phieu" id="nmine" hidden>Phiếu của tôi</a>
+   <a href="#/quay" data-r="quay" id="ndesk" hidden>Quầy mượn trả</a>
+   <a href="#/quan-tri" data-r="quan-tri" id="nadm" hidden>Quản trị</a>
+   <button class="login" id="nlogin">Đăng nhập</button>
   </nav>
  </div>
  <div class="mega" id="mega" hidden><div class="wrap" id="megagrid"></div></div>
@@ -132,34 +142,52 @@ footer{background:var(--navy);color:#cbd8d2;padding:26px 0;font-size:.88em}
   <div class="grid" id="grid"></div>
  </div>
  <div id="p-cat" hidden><h2 id="ct"></h2><p class="sub">Chỉ liên kết đến nguồn hợp pháp, có ghi rõ nguồn.</p><div class="rgrid" id="clist"></div></div>
- <div id="p-tk" hidden>
-  <h2>Phiếu mượn của tôi</h2>
-  <div class="panel"><label for="tid">Mã phiếu (8 ký tự)</label>
-   <div style="display:flex;gap:8px;margin-top:6px"><input id="tid" maxlength="12" style="flex:1;min-width:0"><button class="go" id="tgo">Xem phiếu</button></div>
-   <div id="tout" class="msg" role="status"></div><div id="tsaved"></div></div>
- </div>
+ <div id="p-tk" hidden><h2>Phiếu mượn của tôi</h2><div id="minelist"></div></div>
+ <div id="p-desk" hidden><h2>Quầy mượn trả</h2><p class="sub">Cho mượn khi trao sách, nhận trả khi học sinh hoàn trả.</p>
+  <input id="dq" placeholder="Lọc theo tên, tài khoản, lớp hoặc sách" style="width:100%;max-width:420px"><div id="desklist"></div></div>
+ <div id="p-adm" hidden><h2>Quản trị tài khoản</h2><p class="sub" id="admnote"></p>
+  <div id="admbody">
+   <div class="panel"><h3 style="margin-top:0">Tạo tài khoản</h3>
+    <form class="form" id="cu">
+     <input id="cu-u" placeholder="Tài khoản (mã học sinh hoặc tên đăng nhập)" required maxlength="20">
+     <input id="cu-n" placeholder="Họ và tên" required maxlength="60">
+     <select id="cu-r"><option value="hocsinh">Học sinh</option><option value="giaovien">Giáo viên</option><option value="thuthu">Thủ thư / GV phụ trách mượn trả</option><option value="admin">Quản trị</option></select>
+     <input id="cu-c" placeholder="Lớp (ví dụ 11A3)" maxlength="10"><button class="go">Tạo tài khoản</button>
+    </form><div id="cumsg" class="msg" role="status"></div></div>
+   <div class="panel"><h3 style="margin-top:0">Cấp lại mật khẩu</h3>
+    <form class="form" id="rp"><input id="rp-u" placeholder="Tài khoản cần cấp lại" required maxlength="20"><button class="go">Cấp mật khẩu mới</button></form>
+    <div id="rpmsg" class="msg" role="status"></div></div>
+   <p class="sub">Tạo nhiều tài khoản cùng lúc: menu Thư viện trong Google Sheet (xem docs/TAI_KHOAN.md).</p>
+  </div></div>
  <div id="p-log" hidden><h2>Nhật ký đọc</h2><div class="panel"><p id="logsum"></p><div id="badges"></div></div></div>
 </main>
 
 <dialog id="dlg">
  <h2 id="dt" style="margin:0"></h2><p id="dm"></p>
- <form id="bf" autocomplete="off">
-  <label for="sc">Mã học sinh</label><input id="sc" required maxlength="20">
-  <label for="cl">Lớp</label><input id="cl" required maxlength="10" placeholder="Ví dụ: 11A3">
-  <input class="hp" id="web" tabindex="-1" aria-hidden="true">
-  <p style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="go" id="bgo">Đặt mượn</button><button type="button" id="rd">Tôi đã đọc xong</button><button type="button" id="cx">Đóng</button></p>
- </form>
+ <p style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="go" id="bgo">Đặt mượn</button><button type="button" id="blg">Đăng nhập để mượn</button><button type="button" id="rd">Tôi đã đọc xong</button><button type="button" id="cx">Đóng</button></p>
  <div id="bm" class="msg" role="status"></div>
 </dialog>
 
-<footer><div class="wrap">Thư viện chỉ lưu mã học sinh và lớp để quản lý mượn trả. Nhật ký đọc chỉ lưu trên thiết bị của bạn.</div></footer>
+<dialog id="ldlg"><h2 style="margin:0">Đăng nhập</h2>
+ <form id="lf" autocomplete="on"><label for="lu">Tài khoản</label><input id="lu" required maxlength="20" autocomplete="username">
+  <label for="lp">Mật khẩu</label><input id="lp" type="password" required maxlength="64" autocomplete="current-password">
+  <p style="display:flex;gap:8px;margin-top:14px"><button class="go" id="lgo">Đăng nhập</button><button type="button" data-close="ldlg">Đóng</button></p></form>
+ <div id="lm" class="msg" role="status"></div><p style="font-size:.85em;color:var(--mut)">Quên mật khẩu? Liên hệ thủ thư hoặc quản trị để được cấp lại.</p></dialog>
 
+<dialog id="pdlg"><h2 style="margin:0">Đổi mật khẩu</h2>
+ <form id="pf" autocomplete="off"><label for="po">Mật khẩu hiện tại</label><input id="po" type="password" required maxlength="64" autocomplete="current-password">
+  <label for="pn">Mật khẩu mới (từ 8 ký tự, có chữ và số)</label><input id="pn" type="password" required maxlength="64" autocomplete="new-password">
+  <label for="pc">Nhập lại mật khẩu mới</label><input id="pc" type="password" required maxlength="64" autocomplete="new-password">
+  <p style="display:flex;gap:8px;margin-top:14px"><button class="go">Lưu mật khẩu</button><button type="button" data-close="pdlg">Đóng</button></p></form>
+ <div id="pm" class="msg" role="status"></div></dialog>
+
+<dialog id="adlg"><h2 id="an" style="margin:0"></h2><p id="am"></p>
+ <p style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" data-act="chp">Đổi mật khẩu</button><button type="button" class="go" data-act="logout">Đăng xuất</button><button type="button" data-close="adlg">Đóng</button></p></dialog>
+
+<footer><div class="wrap">Thư viện chỉ lưu tài khoản, họ tên và lớp để quản lý mượn trả. Mật khẩu được mã hóa, nhật ký đọc chỉ lưu trên thiết bị của bạn.</div></footer>
+
+<script src="config.js"></script>
 <script>
-const CONFIG = {
-  school: "Trường THPT Chuyên Lê Quý Đôn, Điện Biên",
-  grades: ["10", "11", "12"],
-  appsScriptUrl: "" // dán URL Web App (kết thúc bằng /exec)
-};
 // slug, tên hiển thị (phải trùng cột "Loại" trong tab Resources), ký hiệu
 const CATS = [["khong-gian-van-hoa","Không gian văn hóa","K"],["sach-giay","Sách giấy","G"],["sach-dien-tu","Sách điện tử","Đ"],["sach-noi","Sách nói","N"],["bai-giang-dien-tu","Bài giảng điện tử","B"],["video","Video","V"],["album-anh","Album ảnh","A"],["ky-nang-song","Kỹ năng sống","S"],["bao-tap-chi","Báo, tạp chí","T"]];
 
@@ -172,7 +200,15 @@ const store = {
   get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
-let books = [], res = [], gr = store.get("gr", "all"), cur = null, q = "";
+const ses = {
+  get() { try { return JSON.parse(sessionStorage.getItem("sess")); } catch (e) { return null; } },
+  set(v) { try { sessionStorage.setItem("sess", JSON.stringify(v)); } catch (e) {} },
+  clear() { try { sessionStorage.removeItem("sess"); } catch (e) {} }
+};
+const ROLE = { hocsinh: "Học sinh", giaovien: "Giáo viên", thuthu: "Thủ thư", admin: "Quản trị" };
+let books = [], res = [], gr = store.get("gr", "all"), cur = null, q = "", S = ses.get(), desk = [];
+const isStaff = () => S && (S.role === "admin" || S.role === "thuthu");
+const isAdmin = () => S && S.role === "admin";
 
 $("#school").textContent = CONFIG.school;
 $("#megagrid").innerHTML = CATS.map((c, i) => `<a href="#/tai-lieu/${c[0]}" style="--h:${i * 37 + 150}"><span class="ic">${c[2]}</span>${esc(c[1])}</a>`).join("");
@@ -187,7 +223,7 @@ async function api(action, params) {
 }
 const grades = x => (Array.isArray(x.grade) ? x.grade : String(x.grade || "Chung").split(",")).map(s => s.trim());
 
-async function load() {
+async function fetchData() {
   let live = false;
   if (CONFIG.appsScriptUrl) {
     try {
@@ -198,14 +234,20 @@ async function load() {
   if (!live) {
     try {
       [books, res] = await Promise.all([fetch("data/books.json").then(r => r.json()), fetch("data/resources.json").then(r => r.json())]);
-    } catch (e) { $("#note").textContent = "Chưa tải được danh mục. Hãy thử tải lại trang."; return; }
+    } catch (e) { $("#note").textContent = "Chưa tải được danh mục. Hãy thử tải lại trang."; return false; }
     if (CONFIG.appsScriptUrl) $("#note").textContent = "Đang xem danh mục lưu sẵn. Số bản còn lại có thể chưa mới nhất.";
-  }
+  } else { $("#note").textContent = ""; }
   books.forEach(b => { b.grade = grades(b); if (b.available == null) b.available = b.copies; });
   res.forEach(r => { r.grade = grades(r); });
-  $("#gr").innerHTML = ["all", ...CONFIG.grades].map(k => `<button data-gr="${esc(k)}" aria-pressed="${k === gr}">${k === "all" ? "Tất cả" : "Khối " + esc(k)}</button>`).join("");
-  badges(); saved(); route();
+  return true;
 }
+async function load() {
+  if (!(await fetchData())) return;
+  $("#gr").innerHTML = ["all", ...CONFIG.grades].map(k => `<button data-gr="${esc(k)}" aria-pressed="${k === gr}">${k === "all" ? "Tất cả" : "Khối " + esc(k)}</button>`).join("");
+  badges(); chrome(); route();
+  if (S && S.must) $("#pdlg").showModal();
+}
+async function refresh() { if (await fetchData()) { renderHome(); renderBooks(); } }
 
 const cover = (b, lg) => `<button class="book${lg ? " lg" : ""}" data-id="${esc(b.id)}" style="--c:${color(b.color)}" aria-label="Xem sách ${esc(b.title)}"><span class="cover">${esc(b.title)}</span></button>`;
 const match = x => gr === "all" || x.grade.includes(gr) || x.grade.includes("Chung");
@@ -240,13 +282,15 @@ function route() {
   const [a, b] = (location.hash.replace(/^#\/?/, "") || "").split("/");
   const home = !a;
   $("#v-home").hidden = !home; $("#v-page").hidden = home;
-  ["books", "cat", "tk", "log"].forEach(k => $("#p-" + k).hidden = true);
+  ["books", "cat", "tk", "log", "desk", "adm"].forEach(k => $("#p-" + k).hidden = true);
   const key = home ? "home" : a;
   if (home) renderHome();
   else if (a === "sach-giay") { $("#p-books").hidden = false; $("#q2").value = q; renderBooks(); }
   else if (a === "tai-lieu" && b === "sach-giay") { location.hash = "#/sach-giay"; return; }
   else if (a === "tai-lieu") { $("#p-cat").hidden = false; renderCat(b); }
-  else if (a === "phieu") $("#p-tk").hidden = false;
+  else if (a === "phieu") { $("#p-tk").hidden = false; loadMine(); }
+  else if (a === "quay") { $("#p-desk").hidden = false; loadDesk(); }
+  else if (a === "quan-tri") { $("#p-adm").hidden = false; $("#admbody").hidden = !isAdmin(); $("#admnote").textContent = isAdmin() ? "" : "Bạn cần đăng nhập bằng tài khoản quản trị."; }
   else if (a === "nhat-ky") $("#p-log").hidden = false;
   document.querySelectorAll("nav.main [data-r]").forEach(x => (x.dataset.r === key ? x.setAttribute("aria-current", "page") : x.removeAttribute("aria-current")));
   $("#mega").hidden = true; $("#tl").setAttribute("aria-expanded", "false");
@@ -276,7 +320,7 @@ function openBook(id) {
   const has = cur.available > 0;
   $("#dt").textContent = cur.title;
   $("#dm").textContent = cur.author + " · " + cur.topic + " · " + (has ? "còn " + cur.available + " bản giấy" : "hiện hết bản");
-  document.querySelectorAll("#bf label, #bf input:not(.hp), #bgo").forEach(x => { x.hidden = !has; });
+  $("#bgo").hidden = !(has && S); $("#blg").hidden = !(has && !S);
   $("#bm").textContent = ""; $("#bgo").disabled = false; $("#dlg").showModal();
 }
 $("#cx").onclick = () => $("#dlg").close();
@@ -285,35 +329,107 @@ $("#rd").onclick = () => {
   if (!l.includes(cur.id)) { l.push(cur.id); store.set("log", l); }
   badges(); $("#bm").textContent = "Đã ghi vào nhật ký đọc.";
 };
-$("#bf").onsubmit = async e => {
-  e.preventDefault();
-  const m = $("#bm"), g = $("#bgo");
-  if (!CONFIG.appsScriptUrl) { m.textContent = "Thư viện chưa kết nối sổ mượn trả. Cán bộ thư viện cần dán URL Apps Script."; return; }
-  g.disabled = true; m.textContent = "Đang gửi...";
+$("#bgo").onclick = async () => {
+  const g = $("#bgo"), m = $("#bm"); g.disabled = true; m.textContent = "Đang gửi...";
+  const j = await post("loan", { bookId: cur.id });
+  if (j.ok) { m.textContent = "Đã đặt mượn. Mã phiếu: " + j.ticket + ". Hãy đến quầy thư viện nhận sách."; cur.available = Math.max(0, cur.available - 1); renderBooks(); }
+  else { m.textContent = j.error || "Chưa gửi được."; g.disabled = false; }
+};
+$("#blg").onclick = () => { $("#dlg").close(); openLogin(); };
+
+/* ---- Tài khoản ---- */
+async function post(action, data) {
+  if (!CONFIG.appsScriptUrl) return { ok: false, error: "Thư viện chưa kết nối máy chủ. Quản trị cần điền appsScriptUrl trong config.js." };
   try {
-    const j = await (await fetch(CONFIG.appsScriptUrl, { method: "POST", headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "loan", bookId: cur.id, studentCode: $("#sc").value.trim(), className: $("#cl").value.trim(), website: $("#web").value }) })).json();
-    if (j.ok) {
-      const s = store.get("tickets", []); s.unshift({ t: j.ticket, title: cur.title }); store.set("tickets", s.slice(0, 10)); saved();
-      m.textContent = "Đã đặt mượn. Mã phiếu của bạn: " + j.ticket + ". Hãy chụp lại mã này.";
-      cur.available = Math.max(0, cur.available - 1); renderBooks();
-    } else { m.textContent = j.error || "Chưa gửi được."; g.disabled = false; }
-  } catch (err) { m.textContent = "Không kết nối được. Kiểm tra mạng rồi thử lại."; g.disabled = false; }
+    const r = await fetch(CONFIG.appsScriptUrl, { method: "POST", headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(Object.assign({}, data, { action: action, token: S && S.token })) });
+    const j = await r.json();
+    if (j.auth && S) { S = null; ses.clear(); chrome(); route(); openLogin(); }
+    else if (j.must) { $("#pdlg").showModal(); }
+    return j;
+  } catch (e) { return { ok: false, error: "Không kết nối được. Kiểm tra mạng rồi thử lại." }; }
+}
+function openLogin() { $("#lm").textContent = ""; $("#ldlg").showModal(); }
+function chrome() {
+  $("#nmine").hidden = !S; $("#ndesk").hidden = !isStaff(); $("#nadm").hidden = !isAdmin();
+  $("#nlogin").textContent = S ? S.name : "Đăng nhập";
+}
+$("#nlogin").onclick = () => {
+  if (!S) return openLogin();
+  $("#an").textContent = S.name; $("#am").textContent = (ROLE[S.role] || "") + " · " + S.user + (S.cls ? " · " + S.cls : ""); $("#adlg").showModal();
+};
+document.addEventListener("click", async e => {
+  const t = e.target;
+  const cl = t.closest("[data-close]"); if (cl) return $("#" + cl.dataset.close).close();
+  const ac = t.closest("[data-act]");
+  if (ac) {
+    if (ac.dataset.act === "login") openLogin();
+    if (ac.dataset.act === "chp") { $("#adlg").close(); $("#pm").textContent = ""; $("#pdlg").showModal(); }
+    if (ac.dataset.act === "logout") { post("logout", {}); S = null; ses.clear(); $("#adlg").close(); chrome(); route(); }
+    return;
+  }
+  const st = t.closest("[data-st]");
+  if (st) {
+    st.disabled = true;
+    const j = await post("setStatus", { ticket: st.dataset.tk, status: st.dataset.st });
+    $("#note").textContent = j.ok ? "Đã cập nhật phiếu." : (j.error || "Chưa cập nhật được.");
+    loadDesk(); refresh();
+  }
+});
+$("#lf").onsubmit = async e => {
+  e.preventDefault();
+  const m = $("#lm"), b = $("#lgo"); b.disabled = true; m.textContent = "Đang đăng nhập...";
+  const j = await post("login", { user: $("#lu").value.trim(), pass: $("#lp").value });
+  b.disabled = false;
+  if (!j.ok) { m.textContent = j.error || "Chưa đăng nhập được."; return; }
+  S = { token: j.token, user: j.user, name: j.name, role: j.role, cls: j.cls, must: j.must };
+  ses.set(S); $("#lp").value = ""; $("#ldlg").close(); chrome(); route();
+  if (S.must) { $("#pm").textContent = "Đây là lần đăng nhập đầu tiên. Bạn hãy đặt mật khẩu mới."; $("#pdlg").showModal(); }
+};
+$("#pf").onsubmit = async e => {
+  e.preventDefault();
+  const m = $("#pm");
+  if ($("#pn").value !== $("#pc").value) { m.textContent = "Hai mật khẩu mới chưa giống nhau."; return; }
+  const j = await post("chpass", { old: $("#po").value, new: $("#pn").value });
+  if (!j.ok) { m.textContent = j.error || "Chưa đổi được mật khẩu."; return; }
+  S.must = false; ses.set(S); $("#pf").reset(); m.textContent = "Đã đổi mật khẩu."; setTimeout(() => $("#pdlg").close(), 800);
 };
 
-/* ---- Tra phiếu ---- */
-function saved() {
-  const s = store.get("tickets", []);
-  $("#tsaved").innerHTML = s.length ? "<p>Phiếu bạn đã đặt:</p>" + s.map(x => `<button data-t="${esc(x.t)}">${esc(x.t)} · ${esc(x.title)}</button>`).join(" ") : "";
+/* ---- Phiếu của tôi, quầy mượn trả, quản trị ---- */
+const needLogin = el => { el.innerHTML = '<p>Bạn cần đăng nhập để sử dụng mục này.</p><button class="go" data-act="login">Đăng nhập</button>'; };
+async function loadMine() {
+  const el = $("#minelist"); if (!S) return needLogin(el);
+  el.textContent = "Đang tải...";
+  const j = await post("myLoans", {});
+  el.innerHTML = j.ok ? (j.items.length ? j.items.map(x =>
+    `<div class="row"><div><b>${esc(x.title)}</b><small>Mã phiếu ${esc(x.ticket)} · ${esc(x.status)}${x.due ? " · hạn trả " + esc(x.due) : ""}</small></div></div>`).join("")
+    : "<p>Bạn chưa có phiếu mượn nào.</p>") : esc(j.error || "");
 }
-$("#tsaved").onclick = e => { const b = e.target.closest("[data-t]"); if (b) { $("#tid").value = b.dataset.t; $("#tgo").click(); } };
-$("#tgo").onclick = async () => {
-  const o = $("#tout"), id = $("#tid").value.trim();
-  if (!id) { o.textContent = "Hãy nhập mã phiếu."; return; }
-  if (!CONFIG.appsScriptUrl) { o.textContent = "Thư viện chưa kết nối sổ mượn trả."; return; }
-  o.textContent = "Đang tra...";
-  try { const j = await api("ticket", { id }); o.textContent = j.ok ? `${j.title}: ${j.status}${j.due ? " (hạn trả " + j.due + ")" : ""}` : (j.error || "Không tìm thấy phiếu."); }
-  catch (e) { o.textContent = "Không kết nối được. Hãy thử lại."; }
+const btn = (t, s, l, c) => `<button class="sm ${c || ""}" data-tk="${esc(t)}" data-st="${esc(s)}">${l}</button>`;
+async function loadDesk() {
+  const el = $("#desklist"); if (!S) return needLogin(el);
+  if (!isStaff()) { el.textContent = "Bạn không có quyền vào mục này."; return; }
+  const j = await post("staffList", {}); desk = j.ok ? j.items : []; renderDesk(j.ok ? "" : (j.error || ""));
+}
+function renderDesk(err) {
+  const k = fold($("#dq").value.trim());
+  const l = desk.filter(x => !k || fold([x.title, x.name, x.user, x.cls].join(" ")).includes(k));
+  $("#desklist").innerHTML = err ? esc(err) : l.length ? l.map(x =>
+    `<div class="row"><div><b>${esc(x.title)}</b><small>${esc(x.name)} (${esc(x.user)}${x.cls ? " · " + esc(x.cls) : ""}) · ${esc(x.status)}${x.due ? " · hạn " + esc(x.due) : ""}</small></div>` +
+    `<div class="acts">${x.status === "Chờ duyệt" ? btn(x.ticket, "Đang mượn", "Cho mượn", "go") + btn(x.ticket, "Đã hủy", "Hủy") : btn(x.ticket, "Đã trả", "Nhận trả", "go")}</div></div>`).join("")
+    : "<p>Không có phiếu nào đang chờ hoặc đang mượn.</p>";
+}
+$("#dq").oninput = () => renderDesk("");
+$("#cu").onsubmit = async e => {
+  e.preventDefault();
+  const j = await post("createUser", { user: $("#cu-u").value.trim(), name: $("#cu-n").value.trim(), role: $("#cu-r").value, cls: $("#cu-c").value.trim() });
+  $("#cumsg").textContent = j.ok ? "Đã tạo tài khoản. Mật khẩu tạm thời: " + j.password + " (chỉ hiện một lần, người dùng sẽ phải đổi khi đăng nhập)." : (j.error || "Chưa tạo được.");
+  if (j.ok) $("#cu").reset();
+};
+$("#rp").onsubmit = async e => {
+  e.preventDefault();
+  const j = await post("resetPass", { user: $("#rp-u").value.trim() });
+  $("#rpmsg").textContent = j.ok ? "Mật khẩu tạm thời mới: " + j.password + " (chỉ hiện một lần)." : (j.error || "Chưa cấp lại được.");
 };
 
 /* ---- Nhật ký đọc ---- */
